@@ -186,7 +186,27 @@
     transform: scale(1.05);
     filter: brightness(1);
   }
+
+  .vfrc-icon._1t7e06e0._11kfxpg8 svg {
+    visibility: hidden !important;
+  }
   
+  .vfrc-icon._1t7e06e0._11kfxpg8::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('https://i.imgur.com/GzyuTNe.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translate(-100%, 0%) !important;
+  }
+  
+  ._11kfxpg7 {
+    transform: translate(-7%, 0%) !important;
+  }
+
   .g3dqfd2 {
       object-fit: cover !important;
       object-position: center !important;
