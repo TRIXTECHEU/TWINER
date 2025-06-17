@@ -1,24 +1,24 @@
 /* TrixTech s.r.o. @2025 */
 
-div[class*="vfrc-header"] img.vfrc-avatar {
-  display: block !important;
-  width: 120px !important;
-  height: 60px !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  border-radius: 0 !important;
-  object-fit: contain !important;
-  transform: translate(-1%, 0%) !important;
-  user-select: none !important;
-  pointer-events: none !important;
-}
+  div[class*="vfrc-header"] img.vfrc-avatar {
+    display: block !important;
+    width: 120px !important;
+    height: 60px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    border-radius: 0 !important;
+    object-fit: contain !important;
+    transform: translate(-1%, 0%) !important;
+    user-select: none !important;
+    pointer-events: none !important;
+  }
 
-._15emaa41 {
-  font-weight: bold;
-}
+  .vfrc-widget {
+    z-index: 999999 !important;
+  }
 
-.vfrc-chat, .s9t60i1 {
+  .vfrc-chat, .s9t60i1 {
     background-image: url('https://i.imgur.com/Tng1y0x.png') !important;
     background-size: cover !important;
     background-position: center !important;
@@ -84,11 +84,11 @@ div[class*="vfrc-header"] img.vfrc-avatar {
 
   .jyiuei2 {
     background-color: #fff !important;
-}
+  }
 
-.s9t60i0 {
+  .s9t60i0 {
     border: 1.5px solid #FF4F00 !important;
-}
+  }
   
   #vfrc-start-chat::before {
     content: "Spustit nový chat" !important;
@@ -197,7 +197,7 @@ div[class*="vfrc-header"] img.vfrc-avatar {
       overflow: hidden;
       -webkit-user-drag: none !important;
       pointer-events: none !important;
-    }
+  }
     
   .dio4eo3 {
       background-color: rgba(255, 255, 255, 0) !important;
@@ -241,11 +241,9 @@ div[class*="vfrc-header"] img.vfrc-avatar {
       pointer-events: none !important;
   }
 
-  ._15s29m9a {
-    color: rgb(255, 255, 255) !important;
-    
-    letter-spacing: 0.2px !important;
-}
+  ._15emaa41 {
+    font-weight: bold;
+  }
 
   ._1t7e06e0 {
     transform: translateX(-0.25px) !important;
@@ -257,7 +255,7 @@ div[class*="vfrc-header"] img.vfrc-avatar {
 
   ._11kfxpg7, .knxm730, .vfrc-user-response, ._15emaa42, .vfrc-chat, .vfrc-message p {
     text-align: left !important;
-}
+  }
 
 .vfrc-button._1q15b0b0.c26d8x0._1q15b0b2.vfrc-launcher.f6dof81._1q15b0b0.c26d8x0._1q15b0b5,
 button.vfrc-button._1q15b0b0.c26d8x0._1q15b0b2.vfrc-launcher.f6dof81._1q15b0b0.c26d8x0._1q15b0b5,
