@@ -196,6 +196,10 @@ window.LoadingAnimationExtension = {
           left: calc(50% - 2.5px);
         }
 
+        .spinner-point-colour {
+          color: #FF4F00;
+        }
+
         .rotating-point-spinner.hide {
           opacity: 0;
           visibility: hidden;
