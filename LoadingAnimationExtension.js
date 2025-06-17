@@ -6,7 +6,7 @@ window.LoadingAnimationExtension = {
   render: ({ trace, element }) => {
     const payload = trace.payload || {};
     const phase = payload.phase || 'output';
-    const lang = 'cs';
+    const lang = 'cs'; // Jazyk je pevně nastaven na češtinu
     const type = (payload.type || 'SMT').toUpperCase();
 
     const messageSequences = {
@@ -53,6 +53,8 @@ window.LoadingAnimationExtension = {
 
     try {
       const customDurationSeconds = payload.duration;
+
+
       let messages;
       if (phase === 'all' && (type === 'KB' || type === 'KB_WS')) {
         messages = messageSequences[lang]?.all?.[type];
@@ -64,22 +66,39 @@ window.LoadingAnimationExtension = {
         messages = messageSequences[lang]?.[phase];
       }
 
-      if (!messages || messages.length === 0) return;
+      if (!messages || messages.length === 0) {
+        return;
+      }
 
       let totalDuration;
-      if (customDurationSeconds && typeof customDurationSeconds === 'number') {
+      if (customDurationSeconds !== undefined && typeof customDurationSeconds === 'number' && customDurationSeconds > 0) {
         totalDuration = customDurationSeconds * 1000;
       } else {
         if (phase === 'analysis') {
-          totalDuration = ['KB', 'KB_WS'].includes(type) ? 12000 : 4000;
+          if (type === 'SMT' || type === 'SWEARS' || type === 'OTHER') {
+            totalDuration = 4000;
+          } else if (type === 'KB' || type === 'KB_WS') {
+            totalDuration = 12000;
+          } else {
+            totalDuration = 3000;
+          }
         } else if (phase === 'output') {
-          totalDuration = type === 'KB_WS' ? 23000 : type === 'KB' ? 12000 : 4000;
+          if (type === 'SMT' || type === 'SWEARS' || type === 'OTHER') {
+            totalDuration = 4000;
+          } else if (type === 'KB') {
+            totalDuration = 12000;
+          } else if (type === 'KB_WS') {
+            totalDuration = 23000;
+          } else {
+            totalDuration = 3000;
+          }
         } else {
           totalDuration = 3000;
         }
       }
 
       const messageInterval = totalDuration / messages.length;
+
       const container = document.createElement('div');
       container.className = 'vfrc-message vfrc-message--extension LoadingAnimation';
 
@@ -91,48 +110,98 @@ window.LoadingAnimationExtension = {
           width: 100%;
           display: block;
         }
+
+        .vfrc-message.vfrc-message--extension.LoadingAnimation.hide {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
+
         .loading-box {
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 10px 14px;
-          background-color: #f2f4f8;
-          border-radius: 14px;
-          font-family: 'Inter', sans-serif;
+          gap: 8px;
+          padding: 8px 12px;
+          margin: 0;
+          width: 100%;
+          box-sizing: border-box;
+          background-color: #F9FAFB;
+          border-radius: 12px;
+          border: 1px solid #E5E7EB;
         }
+
         .loading-text {
-          font-size: 13px;
-          font-style: italic;
-          color: #333;
+          color: rgba(26, 30, 35, 0.7);
+          font-size: 12px;
+          line-height: 1.3;
+          font-family: var(--_1bof89na);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          max-width: 100%;
+          opacity: 1;
+          transform: translateY(0);
+          transition: opacity 0.3s ease-out, transform 0.3s ease-out;
           flex: 1;
+          min-width: 0;
+          font-style: italic;
         }
+
+        .loading-text.changing {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+
+        .loading-text.entering {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+
+        @keyframes loading-spinner-spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
         .rotating-point-spinner {
+          position: relative;
           width: 16px;
           height: 16px;
           animation: loading-spinner-spin 0.9s linear infinite;
-          position: relative;
+          flex-shrink: 0;
+          transition: opacity 0.3s ease-out, width 0.3s ease-out;
+          opacity: 1;
         }
+
         .rotating-point-spinner::before {
           content: "";
+          box-sizing: border-box;
           position: absolute;
+          top: 0;
+          left: 0;
           width: 100%;
           height: 100%;
           border-radius: 50%;
           border: 2px solid rgba(0, 0, 0, 0.12);
         }
+
         .rotating-point-spinner::after {
           content: "";
+          box-sizing: border-box;
+          position: absolute;
           width: 5px;
           height: 5px;
-          background-color: #696969;
+          background-color: var(--spinner-point-colour, #696969);
           border-radius: 50%;
-          position: absolute;
-          top: -1.5px;
+          top: -1.5px; 
           left: calc(50% - 2.5px);
         }
-        @keyframes loading-spinner-spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+
+        .rotating-point-spinner.hide {
+          opacity: 0;
+          visibility: hidden;
+          width: 0 !important;
+          display: none;
+          /* margin-right: 0 !important;
         }
       `;
       container.appendChild(style);
@@ -140,9 +209,17 @@ window.LoadingAnimationExtension = {
       const loadingBox = document.createElement('div');
       loadingBox.className = 'loading-box';
 
-      const spinner = document.createElement('div');
-      spinner.className = 'rotating-point-spinner';
-      loadingBox.appendChild(spinner);
+      const spinnerAnimationContainer = document.createElement('div');
+      spinnerAnimationContainer.className = 'rotating-point-spinner';
+
+      const mainColour = trace.payload?.mainColour;
+      if (mainColour && typeof mainColour === 'string') {
+        if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(mainColour)) {
+          spinnerAnimationContainer.style.setProperty('--spinner-point-colour', mainColour);
+        }
+      }
+
+      loadingBox.appendChild(spinnerAnimationContainer);
 
       const textElement = document.createElement('span');
       textElement.className = 'loading-text';
@@ -153,7 +230,20 @@ window.LoadingAnimationExtension = {
       let currentIndex = 0;
 
       const updateText = (newText) => {
-        textElement.textContent = newText;
+        const currentTextElement = loadingBox.querySelector('.loading-text');
+        if (!currentTextElement) return;
+
+        currentTextElement.classList.add('changing');
+
+        setTimeout(() => {
+          currentTextElement.textContent = newText;
+          currentTextElement.classList.remove('changing');
+          currentTextElement.classList.add('entering');
+
+          requestAnimationFrame(() => {
+            currentTextElement.classList.remove('entering');
+          });
+        }, 300);
       };
 
       updateText(messages[currentIndex]);
@@ -165,21 +255,29 @@ window.LoadingAnimationExtension = {
             currentIndex++;
             updateText(messages[currentIndex]);
           } else {
-            clearInterval(intervalId);
+            if (intervalId) {
+              clearInterval(intervalId);
+              intervalId = null;
+            }
           }
         }, messageInterval);
       }
 
       const animationTimeoutId = setTimeout(() => {
-        clearInterval(intervalId);
-        spinner.classList.add('hide');
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        if (spinnerAnimationContainer) {
+          spinnerAnimationContainer.classList.add('hide');
+        }
       }, totalDuration);
 
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           mutation.removedNodes.forEach((node) => {
             if (node === container || node.contains(container)) {
-              clearInterval(intervalId);
+              if (intervalId) clearInterval(intervalId);
               clearTimeout(animationTimeoutId);
               observer.disconnect();
             }
@@ -192,10 +290,30 @@ window.LoadingAnimationExtension = {
         subtree: true
       });
 
+      const responseObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && node.classList.contains('vfrc-message--ai')) {
+              if (intervalId) clearInterval(intervalId);
+              clearTimeout(animationTimeoutId);
+              spinnerAnimationContainer.classList.add('hide');
+              responseObserver.disconnect();
+              return;
+            }
+          });
+        });
+      });
+
+      responseObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
       if (element) {
         element.appendChild(container);
         void container.offsetHeight;
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   }
 };
