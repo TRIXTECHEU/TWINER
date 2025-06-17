@@ -1,4 +1,4 @@
-export const LoadingAnimationExtension = {
+window.LoadingAnimationExtension = {
   name: 'LoadingAnimation',
   type: 'response',
   match: ({ trace }) =>
