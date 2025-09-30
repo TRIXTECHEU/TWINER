@@ -135,7 +135,7 @@ window.SelectExtention = {
           .sf-list.open::-webkit-scrollbar-thumb { background: #FF4F00; border-radius: 8px; }
           .sf-list.open::-webkit-scrollbar-track { background: #FFF3EC; border-radius: 8px; }
 
-          .btn-yes { color: #fff; background: var(--accent); }
+          .btn-yes { color: #fff !important; background: var(--accent); }
           .btn-yes:disabled { background: #ffb592; cursor: not-allowed; }
           .btn-yes::before {
             content: ""; position: absolute; inset: 0;
@@ -143,6 +143,7 @@ window.SelectExtention = {
             opacity: 0; transition: opacity .15s ease;
           }
           .btn-yes:hover:not(:disabled)::before { opacity: 1; }
+          .btn-yes:hover:not(:disabled) { color: #fff !important; }
 
           .btn-no {
             color: var(--grey-text);
