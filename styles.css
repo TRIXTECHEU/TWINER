@@ -491,9 +491,8 @@ button.vfrc-button[label="Cancel"]:hover { background: #e9edf1 !important; }
   margin: 0 !important;
   box-sizing: border-box !important;
   transform: none !important;
-  position: fixed !important;
-  bottom: 15px !important;
-  right: 15px !important;
+  bottom: 25px !important;
+  right: 25px !important;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
 
@@ -563,7 +562,6 @@ button.vfrc-button._1q15b0b0.c26d8x0._1q15b0b2.vfrc-launcher.f6dof81._1q15b0b0.c
   margin-top: 15px !important;
   margin-right: 15px !important;
   margin-bottom: 15px !important;
-  position: relative !important;
   bottom: auto !important;
   right: 5px !important;
 }
