@@ -109,7 +109,7 @@ window.SelectExtention = {
           .sf-act button {
             flex: 1; padding: 10px 0; font-size: 13px; font-weight: 700; border: none;
             border-radius: 10px; cursor: pointer; position: relative; overflow: hidden;
-            transition: background .15s; will-change: opacity;
+            isolation: isolate; transition: background .15s; will-change: opacity;
           }
 
           .sf-list {
@@ -140,7 +140,7 @@ window.SelectExtention = {
           .btn-yes::before {
             content: ""; position: absolute; inset: 0;
             background: linear-gradient(95deg, #FF4F00 0%, #7437F6 100%);
-            opacity: 0; transition: opacity .15s ease;
+            opacity: 0; transition: opacity .15s ease; z-index: -1;
           }
           .btn-yes:hover:not(:disabled)::before { opacity: 1; }
           .btn-yes:hover:not(:disabled) { color: #fff !important; }
