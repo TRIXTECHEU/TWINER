@@ -22,7 +22,6 @@
     </style>
   </head>
   <body>
-
   <!-- ========== 2) CTA karta (proaktivní zpráva) ========== -->
   <div class="vf-cta" id="vfCta" aria-live="polite">
     <div class="vf-card">
@@ -33,7 +32,6 @@
       </div>
       <p class="vf-desc">Nevíte si rady? Ráda vám pomůžu najít to, co hledáte!</p>
       <button id="vfOpenChat" class="vf-btn" aria-label="Otevřít chatbota">
-        <span class="vf-ico" aria-hidden="true"></span>
         <span class="vf-label">Poraď mi</span>
       </button>
     </div>
@@ -75,13 +73,11 @@
     .vf-title-accent{ color:#FF4F00; }
     .vf-title-rest{ color:#1a1e23; }
     .vf-desc{ margin:15px 0 15px 0; font-size:14px; line-height:1.35; color:var(--vf-text); opacity:.95; }
-    .vf-btn{ margin:8px 0 0 0; padding:10px 16px; border:0; border-radius:10px; background:#FF4F00; color:#fff; font-weight:bold; font-size:15px; cursor:pointer; display:grid; grid-template-columns:22px 1fr 22px; align-items:center; justify-items:center; column-gap:8px; width:100%; max-width:none; box-shadow:none; position:relative; overflow:hidden; backface-visibility:hidden; -webkit-font-smoothing:antialiased; transform:translateZ(0); }
+    .vf-btn{ margin:8px 0 0 0; padding:10px 16px; border:0; border-radius:10px; background:#FF4F00; color:#fff; font-weight:bold; font-size:15px; cursor:pointer; display:grid; grid-template-columns:1fr; align-items:center; justify-items:center; width:100%; max-width:none; box-shadow:none; position:relative; overflow:hidden; backface-visibility:hidden; -webkit-font-smoothing:antialiased; transform:translateZ(0); }
     .vf-btn::before{ content:""; position:absolute; inset:0; background:linear-gradient(95deg, var(--vf-brand) 0%, var(--vf-accent) 100%); opacity:0; transition:opacity .15s ease; will-change:opacity; }
     .vf-btn:hover::before{ opacity:1; }
     .vf-btn > *{ position:relative; z-index:1; }
-    /* ikona v tlačítku vlevo od textu, bez pozadí */
-    .vf-ico{ width:22px; height:22px; display:block; background:url('https://i.imgur.com/o44wkBx.png') center/contain no-repeat; grid-column:1; }
-    .vf-label{ font-weight:bold; grid-column:2; }
+    .vf-label{ font-weight:bold; }
     .vf-btn:active{ transform:translateY(0) }
     .vf-close{ position:absolute; top:-10px; right:-10px; width:24px; height:24px; border-radius:999px; border:1px solid rgba(0,0,0,.12); background:#fff; color:#333; cursor:pointer; font-size:14px; line-height:1; display:grid; place-items:center; box-shadow:0 4px 12px rgba(0,0,0,.14); }
     @media (max-width:520px){ .vf-cta{ right:12px; bottom:calc(var(--vf-launcher-size) + 18px) } .vf-card{ width:88vw; } }
@@ -119,19 +115,13 @@
         title: 'Pokračujeme?',
         desc: 'Můžu navázat tam, kde jsme skončili. Otevřít chat a pokračovat?',
         cta: 'Navázat v chatu'
-      },
-      idle: {
-        title: 'Potřebujete poradit?',
-        desc: 'Vidím, že už chvíli prohlížíte. Můžu doporučit další krok?',
-        cta: 'Ukázat tip'
       }
     };
 
     function pickVariant() {
       const lastOpen = Number((() => { try { return sessionStorage.getItem('vf_last_open_ts'); } catch { return 0; } })() || 0);
       const now = Date.now();
-      if (lastOpen && (now - lastOpen) < 10 * 60 * 1000) return 'returning'; // do 10 min od posledního otevření
-      if ((now - pageLoadTs) > 45 * 1000) return 'idle'; // na stránce déle než 45 s
+      if (lastOpen && (now - lastOpen) < 10 * 60 * 1000) return 'returning';
       return 'default';
     }
 
@@ -161,6 +151,7 @@
     }
 
     function showCTA() {
+      if (isWidgetVisible()) return; // nikdy nezobrazuj, když je widget otevřený
       renderVariant(pickVariant());
       ctaEl.style.display='';
       ctaEl.classList.remove('is-out');
@@ -229,6 +220,12 @@
       if (isWidgetVisible()) suppressCTA();
     });
     observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+
+    // Watchdog: pravidelně kontroluj, jestli je widget otevřený – CTA nesmí být vidět
+    const ctaWatchdog = setInterval(() => {
+      if (isWidgetVisible()) window.__hideCustomCTA?.();
+    }, 1000);
+    window.addEventListener('pagehide', () => clearInterval(ctaWatchdog));
   </script>
  <!-- AI chatbot -->
  <script>
