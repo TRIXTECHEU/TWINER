@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Twiner — Start-up plán (7 kroků)</title>
+
+  <!-- Inter Tight (display) + Inter (fallback) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#FF4F00;
+      --brand2:#7437F6;
+      --text:#0e1320;
+      --muted:#5a6d86;
+      --line:#e9edf2;
+      --panel:#ffffff;
+      --panel2:#f7f8fb;
+      --radius:16px;
+      --shadow: 0 1px 2px rgba(14,19,32,.04), 0 10px 30px rgba(14,19,32,.08);
+      --grad: linear-gradient(95deg, var(--brand), var(--brand2));
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Inter Tight', 'Inter', system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, #fff2e7 0%, transparent 60%),
+        radial-gradient(1200px 600px at 120% 0%, #efeaff 0%, transparent 55%),
+        #ffffff;
+    }
+
+    /* -------- TOP BAR (Twiner styl) -------- */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background:#fff;
+      box-shadow:0 4px 10px rgba(0,0,0,.05);
+      border-bottom:1px solid #f3f4f7;
+    }
+    .topbar .container{
+      max-width:1200px; margin:0 auto; height:72px;
+      display:flex; align-items:center; justify-content:space-between; gap:20px;
+      padding:0 24px;
+    }
+    .topbar-left{display:flex; align-items:center; gap:18px; min-width:0}
+    .tw-logo{display:flex; align-items:center; gap:10px; text-decoration:none}
+    .tw-logo .mark{
+      width:28px; height:28px; border-radius:9px; background:var(--brand); position:relative;
+    }
+    .tw-logo .mark:after{
+      content:""; position:absolute; inset:0; border-radius:9px; background:linear-gradient(95deg,#FF4F00,#7437F6); opacity:.18;
+    }
+    .tw-logo span{ font-weight:900; color:#ff4f00; letter-spacing:.2px; font-size:20px }
+
+    .topbar-search{
+      position:relative; flex:1 1 420px; max-width:520px; min-width:260px;
+    }
+    .topbar-search input{
+      width:100%; height:40px; border-radius:10px;
+      border:0; background:#f5f5f5; color:#5b6675;
+      font-size:14px; padding:0 44px 0 14px;
+    }
+    .topbar-search button{
+      position:absolute; right:6px; top:4px; width:32px; height:32px;
+      border-radius:10px; border:1px solid #d3d7de; background:#fff; cursor:pointer;
+      display:grid; place-items:center;
+    }
+    .topbar-search svg{ width:16px; height:16px; opacity:.9 }
+
+    .topbar-nav{display:flex; align-items:center; gap:24px}
+    .topbar-link{
+      text-decoration:none; color:#222; font-weight:600; font-size:14px;
+      white-space:nowrap;
+    }
+
+    /* header buttons – Twiner vibe */
+    .tbtn{
+      -webkit-appearance:none; appearance:none;
+      border-radius:10px; padding:0 16px; height:40px; line-height:40px;
+      border:1px solid transparent; font-weight:700; font-size:14px; cursor:pointer;
+      transition:background .15s,border-color .15s,transform .08s;
+    }
+    .tbtn:active{ transform:translateY(1px) }
+    .tbtn-outline{ background:#fff; color:#8f96a3; border-color:#9da6b5 }
+    .tbtn-outline:hover{ background:#f5f5f7; border-color:#e5e8ed }
+    .tbtn-primary{ background:var(--brand); color:#fff; border:0 }
+    .tbtn-primary:hover{ background: linear-gradient(95deg, #FF4F00 0%, #7437F6 100%) }
+
+    /* Shell pod lištou */
+    .shell{max-width:1200px;margin:auto;padding:24px}
+
+    /* Steps — compact chips, 4 stavy (current/done/unlocked/locked) */
+    .steps-wrap{
+      position:sticky; top:72px; z-index:2;   /* posun pod topbar */
+      backdrop-filter:saturate(160%) blur(6px);
+      background:linear-gradient(#ffffffcc,#ffffffcc);
+      border-bottom:1px solid var(--line);
+    }
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap:8px; padding:10px 24px; max-width:1200px; margin:0 auto;
+    }
+    .step{
+      --c: var(--brand);
+      display:flex; align-items:center; gap:8px; justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1.5px solid var(--c);
+      background:#fff;
+      color:var(--c);
+      font-weight:800; font-size:14px; line-height:1;
+      cursor:pointer; white-space:nowrap;
+      transition:background .12s, color .12s, border-color .12s, transform .08s, box-shadow .12s;
+    }
+    .step .badge{
+      width:22px; height:22px; border-radius:8px;
+      display:grid; place-items:center;
+      background:transparent; color:inherit; font-weight:900; font-size:12px;
+      box-shadow:none;
+      border:1.5px solid currentColor;
+    }
+    .step.current{ background:var(--brand); color:#fff; border-color:var(--brand) }
+    .step.done{ --c: var(--brand) }
+    .step.done::after{
+      content:"";
+      width:10px; height:10px; margin-left:2px;
+      border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+      transform:rotate(45deg) translateY(-1px);
+    }
+    .step.unlocked{ --c: var(--brand) }
+    .step:not(.locked):hover{ background: var(--brand); color:#fff; transform:translateY(-1px); box-shadow: 0 6px 26px rgba(255,79,0,.18) }
+    .step:not(.locked):hover .badge{ border-color:#fff }
+    .step.locked{ --c:#c9d1dc; color:#9aa8b7; background:#fff; border-color:#dfe5ec; cursor:not-allowed; opacity:.9 }
+
+    /* sticky progress bar pod lištou */
+    .progress{ height:4px; background:#eceff4; border-radius:999px; overflow:hidden; }
+    .progress > i{ display:block; height:100%; width:0%; background:var(--grad); transition:width .2s }
+
+    /* Layout: main + side */
+    .grid{ display:grid; gap:20px; margin-top:16px; grid-template-columns:minmax(0,1fr) 360px; }
+    @media (max-width:1100px){ .grid{ grid-template-columns:1fr } .side{ display:none } }
+
+    /* Cards & panels */
+    .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow) }
+    .content{ padding:22px }
+    .panel{ display:none }
+    .panel.active{ display:block }
+    h1{ margin:0 0 6px; font-size:28px; letter-spacing:.2px }
+    .lead{ margin:0 0 14px; color:var(--muted) }
+
+    /* Inputs */
+    textarea{
+      width:100%; min-height:168px; resize:vertical;
+      padding:14px 14px 44px 14px;
+      border-radius:14px; border:1px solid #dfe5ec; background:#fff;
+      font-size:16px; line-height:1.5; outline:none;
+      transition:border-color .12s ease, box-shadow .12s ease;
+    }
+    textarea:focus{
+      border-color:transparent;
+      box-shadow:
+        0 0 0 2px #fff,
+        0 0 0 4px rgba(116,55,246,.22);
+    }
+
+    /* CTAs */
+    .ctas{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
+    .btn{
+      --padx:16px;
+      position:relative; display:inline-flex; align-items:center; gap:10px;
+      padding:12px var(--padx); border-radius:12px;
+      border:1px solid var(--line); background:#fff; cursor:pointer;
+      font-weight:800; letter-spacing:.1px; transition:transform .08s, box-shadow .12s, border-color .12s, background .12s, color .12s;
+    }
+    .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow) }
+    .btn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(116,55,246,.35) }
+    .btn .icon{ width:18px; height:18px }
+
+    .btn.primary{ color:#fff; border:none; background:var(--grad) }
+    .btn.primary::after{
+      content:""; position:absolute; inset:0; border-radius:12px; opacity:0;
+      background:radial-gradient(160px 60px at 10% 30%, rgba(255,255,255,.25), transparent 60%);
+      transition:opacity .12s;
+    }
+    .btn.primary:hover::after{ opacity:.9 }
+
+    .btn.ai{ color:#fff; border:none; background:var(--grad) }
+
+    .footer-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:12px }
+
+    /* Side placeholder */
+    .side{
+      position:sticky; top:92px; height:calc(100vh - 100px);
+      display:flex; align-items:flex-end; justify-content:flex-end;
+    }
+    .ghost{
+      width:340px; min-height:140px; border:1px dashed #dcd7ff;
+      border-radius:14px; display:grid; place-items:center; background:#fff; color:#5a4ae3; font-weight:800
+    }
+
+    /* Mobile tweaks */
+    @media (max-width:920px){
+      .topbar-search{ display:none }
+      .topbar .container{ height:66px }
+      .steps{ grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:6px; padding:8px 16px }
+      .side{ display:none }
+    }
+    @media (max-width:480px){
+      .step{ font-size:13px; padding:7px 10px }
+      .step .badge{ width:20px; height:20px; font-size:11px }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SVG ICONS -->
+  <svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="i-magic" viewBox="0 0 24 24">
+        <path d="M8 3l1.8 3.6L13 9l-3.6 1.8L8 14l-1.8-3.2L3 9l3.2-1.4L8 3z" fill="currentColor"/>
+        <path d="M14.5 3.5l.9 1.8 1.8.9-1.8.9-.9 1.8-.9-1.8-1.8-.9 1.8-.9.9-1.8z" fill="currentColor" opacity=".6"/>
+        <path d="M5 19l8.5-8.5 2 2L7 21H5v-2z" fill="currentColor"/>
+      </symbol>
+      <symbol id="i-save" viewBox="0 0 24 24">
+        <path d="M5 3h10l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3z" stroke="currentColor" fill="none" stroke-width="2"/>
+        <path d="M7 3v6h8V3" stroke="currentColor" stroke-width="2"/>
+      </symbol>
+      <symbol id="i-back" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="i-next" viewBox="0 0 24 24">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- NEW TOP BAR -->
+  <header class="topbar" role="banner">
+    <div class="container">
+      <div class="topbar-left">
+        <a class="tw-logo" href="/">
+          <!-- originální logo Twiner -->
+          <img src="https://www.twiner.cz/images/logo_header.svg" alt="twiner" />
+        </a>
+  
+        <form class="topbar-search" action="#" method="get" role="search" aria-label="Vyhledat">
+          <input type="text" placeholder="Vyhledat Twinera…" name="q" />
+          <button type="submit" aria-label="Hledat">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+  
+      <nav class="topbar-nav" aria-label="Hlavní">
+        <a class="topbar-link" href="#">Twineři</a>
+        <a class="topbar-link" href="#">Chci se přidat</a>
+        <button class="tbtn tbtn-outline" type="button">Přihlásit se</button>
+        <button class="tbtn tbtn-primary" type="button">Zaregistrovat se</button>
+      </nav>
+    </div>
+    <div class="topbar-underline" aria-hidden="true"></div>
+  </header>
+
+  <!-- Sticky steps -->
+  <div class="steps-wrap">
+    <div class="steps" id="steps">
+      <button class="step" data-step="1" aria-current="step"><span class="badge">1</span>Můj nápad</button>
+      <button class="step" data-step="2" disabled><span class="badge">2</span>Jak to udělám</button>
+      <button class="step" data-step="3" disabled><span class="badge">3</span>Pro koho</button>
+      <button class="step" data-step="4" disabled><span class="badge">4</span>Cíl</button>
+      <button class="step" data-step="5" disabled><span class="badge">5</span>Náklady</button>
+      <button class="step" data-step="6" disabled><span class="badge">6</span>Sestavit tým</button>
+      <button class="step" data-step="7" disabled><span class="badge">7</span>Marketing</button>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+  </div>
+
+  <div class="shell" style="margin-top:14px">
+    <div class="grid">
+      <div class="card" role="application" aria-label="Plánovač startupu — 7 kroků">
+        <div class="content">
+          <!-- Panely 1–7 (IDs + struktura zachována) -->
+          <section id="panel-1" class="panel active">
+            <h1>Co je tvůj nápad a jakou změnu přinese?</h1>
+            <p class="lead">Jedna–dvě věty stačí. Klidně pracovní verze.</p>
+            <textarea id="f-1" placeholder="„Napadlo mě, že…“ / „Všiml/a jsem si, že…“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-2" class="panel">
+            <h1>Jak to uděláš krok za krokem?</h1>
+            <p class="lead">Co je první, jak se to dostane k lidem, co bude výstup.</p>
+            <textarea id="f-2" placeholder="„Představuju si to tak, že…“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-3" class="panel">
+            <h1>Pro koho to je?</h1>
+            <p class="lead">Ideální zákazník / persony / segmenty.</p>
+            <textarea id="f-3" placeholder="„Hodí se pro…“ / „Primárně pro…“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-4" class="panel">
+            <h1>Jaký je cíl / metrika úspěchu?</h1>
+            <p class="lead">Konkrétní KPI, horizont, milníky.</p>
+            <textarea id="f-4" placeholder="„Cíl: … do …“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-5" class="panel">
+            <h1>Jaké budou náklady / rozpočet?</h1>
+            <p class="lead">Fixní × variabilní, jednorázové × měsíční.</p>
+            <textarea id="f-5" placeholder="„MVP ~ … Kč; měsíčně … Kč…“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-6" class="panel">
+            <h1>Koho potřebuješ do týmu?</h1>
+            <p class="lead">Role, zodpovědnosti, seniorita, dostupnost.</p>
+            <textarea id="f-6" placeholder="„Hledám … (role) na … (úvazek)…“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Další krok <svg class="icon"><use href="#i-next"/></svg></button>
+            </div>
+          </section>
+
+          <section id="panel-7" class="panel">
+            <h1>Jak to dostaneš k lidem (marketing)?</h1>
+            <p class="lead">Kanály, messaging, rozpočet, taktiky pro MVP.</p>
+            <textarea id="f-7" placeholder="„Začnu …, rozšířím přes …, měřit budu …“"></textarea>
+            <div class="ctas">
+              <button class="btn ai" data-ai disabled><svg class="icon"><use href="#i-magic"/></svg>Poradit se s AI</button>
+              <button class="btn" data-save><svg class="icon"><use href="#i-save"/></svg>Uložit koncept</button>
+            </div>
+            <div class="footer-nav">
+              <button class="btn" data-back><svg class="icon"><use href="#i-back"/></svg>Krok zpět</button>
+              <button class="btn primary" data-next>Dokončit <svg class="icon"><use href="#i-check"/></svg></button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <aside class="side"><div class="ghost">Rezerva pro chat</div></aside>
+    </div>
+  </div>
+
+  <!-- ======= LOGIKA UI + STATE ======= -->
+  <script>
+    // labels
+    window.TW_STEPS_LABELS = {1:'Nápad',2:'Jak to udělám',3:'Pro koho',4:'Cíl',5:'Náklady',6:'Sestavit tým',7:'Marketing'};
+
+    const TOTAL=7;
+    window.state = { current: 1 };
+    const stepsBtns=[...document.querySelectorAll('#steps .step')];
+
+    // init textareas + autosave
+    for(let i=1;i<=TOTAL;i++){
+      const ta=document.getElementById('f-'+i);
+      ta.value = localStorage.getItem('tw_step_'+i) || '';
+      ta.addEventListener('input', e=>{
+        localStorage.setItem('tw_step_'+i, e.target.value);
+        updateLocks(); updateProgress();
+      });
+    }
+    const isFilled = (i)=> (localStorage.getItem('tw_step_'+i)||'').trim().length>0;
+
+    function paintStates(){
+      for(let i=1;i<=TOTAL;i++){
+        const btn = stepsBtns[i-1];
+        const unlocked = !btn.disabled;
+        const done = isFilled(i);
+        btn.classList.remove('current','done','unlocked','locked');
+        if(i === state.current) btn.classList.add('current');
+        if(done) btn.classList.add('done');
+        if(unlocked && !done) btn.classList.add('unlocked');
+        if(!unlocked) btn.classList.add('locked');
+      }
+    }
+
+    function updateLocks(){
+      for(let i=1;i<=TOTAL;i++){
+        const unlocked = (i===1) ? true : [...Array(i-1)].map((_,k)=>isFilled(k+1)).every(Boolean);
+        stepsBtns[i-1].disabled = !unlocked;
+      }
+      paintStates();
+    }
+    updateLocks();
+
+    function updateProgress(){
+      const filled = [...Array(TOTAL)].map((_,k)=>isFilled(k+1)).filter(Boolean).length;
+      const pct = Math.max( (filled / TOTAL) * 100, (window.state.current-1)/ (TOTAL-1) * 100 );
+      const bar = document.getElementById('progress-bar');
+      if(bar) bar.style.width = pct + '%';
+    }
+    updateProgress();
+
+    function setStep(n){
+      const t=Math.max(1,Math.min(TOTAL,n));
+      if(stepsBtns[t-1].disabled) return;
+      state.current=t;
+      stepsBtns.forEach((b,idx)=>b.setAttribute('aria-current',(idx+1)===t?'step':'false'));
+      for(let i=1;i<=TOTAL;i++){
+        document.getElementById('panel-'+i).classList.toggle('active', i===t);
+      }
+      document.getElementById('f-'+t).focus({preventScroll:true});
+      paintStates();
+      updateProgress();
+    }
+    stepsBtns.forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.step))));
+    document.body.addEventListener('click',(e)=>{
+      if(e.target.closest('[data-next]')){ if(!isFilled(state.current)) return alert('Nejdřív vyplň aktuální krok.'); setStep(Math.min(TOTAL, state.current+1)); }
+      if(e.target.closest('[data-back]')) setStep(Math.max(1, state.current-1));
+      if(e.target.closest('[data-save]')) alert('Koncept uložen');
+      if(e.target.closest('[data-ai]')) window.openAI('ai_button');
+    });
+    setStep(1);
+  </script>
+
+  <!-- ======= EXTERNÍ EXTENZE pro write_back (nutné připojit před VF loaderem) ======= -->
+  <script src="./WriteBackExtension.js"></script>
+  <script src="./SelectExtention.js"></script>
+
+  <!-- ======= VOICEFLOW WIDGET (žádný auto-open, posílá launch payload) ======= -->
+  <script>
+    // Build payload pro VF
+    function __twBuildSummary(){
+      const out = [];
+      for(let i=1;i<=7;i++){
+        const v = (document.getElementById('f-'+i)?.value || '').trim();
+        if(v) out.push(`- Krok ${window.TW_STEPS_LABELS[i]}: ${v}`);
+      }
+      return out.join('\n');
+    }
+    function __twBuildPayload(source){
+      return {
+        krok: window.TW_STEPS_LABELS[window.state?.current || 1] || 'Nápad',
+        kroky_souhrn: __twBuildSummary(),
+        source: source || 'ai_button',
+        ts: new Date().toISOString()
+      };
+    }
+
+    // Fronta pro volání před loadem
+    window.__vfReady = false;
+    window.__vfQueue = [];
+
+    // Globální funkce pro tlačítko "Poradit se s AI"
+    window.openAI = function(source){
+      const payload = __twBuildPayload(source);
+      if (!window.__vfReady || !window.voiceflow?.chat?.interact) {
+        window.__vfQueue.push(payload);
+        return;
+      }
+      try { window.voiceflow.chat.interact({ type: 'launch', payload }); } catch(e){ console.warn(e); }
+      try { window.voiceflow.chat.open(); } catch {}
+    };
+  </script>
+
+  <script type="text/javascript">
+    (function(d, t) {
+      const v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = () => {
+        window.voiceflow.chat.load({
+          verify:    { projectID: '683439dce3e4ba215ad220d5' },
+          url:       'https://general-runtime.voiceflow.com',
+          versionID: 'production',
+          render:    { mode: 'overlay' },
+          assistant: {
+            // držet session lokálně (žádný forced reset)
+            persistence: 'localStorage',
+            stylesheet: 'styles.css',
+            extensions: [
+              // tvoje další ext. pokud používáš:
+              window.WriteBackExtension,      // <- tahle je důležitá pro propsání do polí
+              window.SelectExtention,
+              window.LoadingAnimationExtention
+            ].filter(Boolean)
+          }
+        }).then(() => {
+          // ready
+          window.__vfReady = true;
+
+          // povol AI tlačítka
+          document.querySelectorAll('[data-ai]').forEach(btn => btn.removeAttribute('disabled'));
+
+          // vyprázdni frontu
+          try {
+            while (window.__vfQueue && window.__vfQueue.length) {
+              const p = window.__vfQueue.shift();
+              if (!p) continue;
+              window.voiceflow.chat.interact({ type: 'launch', payload: p });
+              window.voiceflow.chat.open();
+            }
+          } catch(e){ console.warn('Queue flush error:', e); }
+        });
+      };
+      v.src  = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+      v.type = "text/javascript";
+      s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+  </script>
+  <!-- /Voiceflow -->
+</body>
+</html>
